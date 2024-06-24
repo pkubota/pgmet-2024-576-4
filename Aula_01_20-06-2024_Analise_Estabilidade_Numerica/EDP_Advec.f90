@@ -286,12 +286,17 @@ CONTAINS
   FUNCTION   Solve_Estabilidade_FTCS_4thCS(termX,u)   RESULT (ok)
       REAL(KIND=r8), INTENT(INOUT) :: termX(Idim)
       REAL(KIND=r8), INTENT(IN   ) :: u(Idim)
+      REAL(KIND=r8) :: mi=0.7
       INTEGER :: i2,xb3,xb2,xb,xc,xf,xf2,xf3,i,ok
       DO i=1,Idim
          CALL index2(i,xb3,xb2,xb,xc,xf,xf2,xf3)
          !termX(i) = u(xc) -  C*DeltaT*( (u(xf) - u(xb) ))/(2.0*DeltaX)
-         termX(i) = u(xc) -  (C*(DeltaT/(12.0*DeltaX)))* &
+         !termX(i) = u(xc) -  (C*(DeltaT/(12.0*DeltaX)))* &
+         !         ( (-u(xf2) + 8.0*u(xf) - 8.0*u(xb)+ u(xb2)))
+
+         termX(i) = u(xc) -  (mi/12.0)* &
                   ( (-u(xf2) + 8.0*u(xf) - 8.0*u(xb)+ u(xb2)))
+
       END DO
     ok=0
   END FUNCTION  Solve_Estabilidade_FTCS_4thCS
@@ -476,10 +481,10 @@ PROGRAM  Main
         END DO  
 
         test=AnaliticFunction(termXa,ua,it)
-!!        test=Solve_Estabilidade_UpWind_1thBW(termX,u)
+        test=Solve_Estabilidade_UpWind_1thBW(termX,u)
 !!        test=Solve_Estabilidade_FTCS_2thCS(termX,u)
 !!        test=Solve_Estabilidade_FTCS_2thCS2(termX,u)
-        test=Solve_Estabilidade_FTCS_3thCS(termX,u)
+!!        test=Solve_Estabilidade_FTCS_3thCS(termX,u)
 
 !        test=Solve_Estabilidade_FTCS_4thCS(termX,u)
 !       test=Solve_Estabilidade_CTCS_2thCS(termX,u)
